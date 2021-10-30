@@ -1,5 +1,6 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors');
 require('dotenv').config()
 
@@ -12,21 +13,59 @@ app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zaiok.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function run() {
     try {
+
+        // Connect to database
         await client.connect();
-        console.log("database connected successfully")
         const database = client.db("wonderTravel")
         const packageCollection = database.collection("packages")
+        const orderCollection = database.collection("orders")
 
-        // GET Products API
+        // Get Packages API
         app.get('/packages', async (req, res) => {
             const cursor = packageCollection.find({});
             const packages = await cursor.toArray();
             res.send(packages);
+        })
+
+        // Add Packages API
+        app.post('/packages', async (req, res) => {
+            const package = req.body;
+            const result = await packageCollection.insertOne(package);
+            res.json(result);
+        })
+
+        // Add Orders API
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.json(result);
+        })
+
+        // Get Orders API
+        app.get('/orders', async (req, res) => {
+            const cursor = orderCollection.find({});
+            const orders = await cursor.toArray();
+            res.send(orders);
+        })
+
+        // Delete Orders API
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.json(result);
+        })
+
+        // Get MyOrders API
+        app.get('/order/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { "email": email };
+            const order = await orderCollection.find(query);
+            res.json(order);
         })
     }
     finally {
@@ -37,7 +76,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Wonder Travel node mongo server')
+    res.send('Wonder Travel website node mongo server')
 });
 
 
