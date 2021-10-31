@@ -54,11 +54,10 @@ async function run() {
 
         // Get MyOrders API
         app.post('/orders/email', async (req, res) => {
-            // const email = req.body.email;
-            console.log("got email");
-            // const query = { "email": email };
-            // const result = await orderCollection.find(query).toArray();
-            // res.json(result);
+            const email = req.body.email;
+            const query = { "email": email };
+            const result = await orderCollection.find(query).toArray();
+            res.json(result);
         })
 
         // Delete Orders API
