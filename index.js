@@ -52,20 +52,21 @@ async function run() {
             res.send(orders);
         })
 
+        // Get MyOrders API
+        app.post('/orders/email', async (req, res) => {
+            // const email = req.body.email;
+            console.log("got email");
+            // const query = { "email": email };
+            // const result = await orderCollection.find(query).toArray();
+            // res.json(result);
+        })
+
         // Delete Orders API
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await orderCollection.deleteOne(query);
             res.json(result);
-        })
-
-        // Get MyOrders API
-        app.get('/order/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { "email": email };
-            const order = await orderCollection.find(query);
-            res.json(order);
         })
     }
     finally {
