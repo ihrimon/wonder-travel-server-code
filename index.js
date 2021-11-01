@@ -38,6 +38,14 @@ async function run() {
             res.json(result);
         })
 
+        // Get Single Package
+        app.get('/packages/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const package = await packageCollection.findOne(query);
+            res.json(package);
+        })
+
         // Add Orders API
         app.post('/orders', async (req, res) => {
             const order = req.body;
