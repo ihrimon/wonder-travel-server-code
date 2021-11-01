@@ -68,6 +68,18 @@ async function run() {
             res.json(result);
         })
 
+        // Get id for approval status
+        app.put('/api/:company', function (res, req) {
+            res.send('this is an update');
+        }, send);
+
+        app.put('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.findOne(query);
+            res.json(result);
+        })
+
         // Delete Orders API
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
