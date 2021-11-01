@@ -68,11 +68,19 @@ async function run() {
             res.json(result);
         })
 
-        // Get id for approval status
-        app.get('/orders/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await orderCollection.findOne(query);
+        // Update Status
+        app.post('/updateStatus', async (req, res) => {
+            const id = req.body.id;
+            const status = req.body.status;
+
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateStatus = {
+                $set: {
+                    "status": status === "pending" ? "approve" : "pending"
+                };
+            };
+            const result = await orderCollection.updateOne(filter, updateStatus, options);
             res.json(result);
         })
 
