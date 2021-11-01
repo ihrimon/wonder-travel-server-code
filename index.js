@@ -69,7 +69,7 @@ async function run() {
         })
 
         // Update Status
-        app.post('/updateStatus', async (req, res) => {
+        app.post('/orders/:id', async (req, res) => {
             const id = req.body.id;
             const status = req.body.status;
 
@@ -78,7 +78,7 @@ async function run() {
             const updateStatus = {
                 $set: {
                     "status": status === "pending" ? "approve" : "pending"
-                };
+                }
             };
             const result = await orderCollection.updateOne(filter, updateStatus, options);
             res.json(result);
