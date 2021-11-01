@@ -69,10 +69,6 @@ async function run() {
         })
 
         // Get id for approval status
-        app.put('/api/:company', function (res, req) {
-            res.send('this is an update');
-        }, send);
-
         app.put('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
